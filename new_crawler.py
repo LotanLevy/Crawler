@@ -6,14 +6,18 @@ import sys
 import os
 import time
 import requests
+import ast
+
+import json
+from pprint import pprint
 
 import urllib3
 from urllib3.exceptions import InsecureRequestWarning
 urllib3.disable_warnings(InsecureRequestWarning)
 
 
-chromedriver = 'C://Users//lotan//OneDrive//Documents//\studies//affordances\dataset_crawler//executable_files//chromedriver.exe'
-keywords = ["Precision Knife", "Utility Knife", "Chef's Knife", "Trimming Knife", "Boning Knife", "Oyster Knife", "Linoleum Knife"]
+chromedriver = 'C://Users//lotan//OneDrive//Documents//studies//affordances//dataset_crawler//Crawler//executable_files//chromedriver.exe'
+keywords = {"knife":["Precision Knife", "Utility Knife", "Chef's Knife", "Trimming Knife", "Boning Knife", "Oyster Knife", "Linoleum Knife"]}
 search_url = lambda keyword: 'https://www.google.com/search?q=' + keyword.replace(" ", "+") + '&source=lnms&tbm=isch'
 OUTPUT = 'pictures'
 
@@ -69,10 +73,11 @@ def download_urls(urls, path):
                 print(e)
 
 
-def get_images(outputdir, searchurl, maximum):
+def get_images(outputdir, parent_key, key, searchurl, maximum, json_path):
     """
     The main program, execute the search by the given keyword and download all the search images,
     until the counter cross the maximum.
+    :param parent_key:
     :param outputdir: The path where the output should be stored
     :param searchurl: The url of the searching
     :param maximum: maximum number to be downloaded
@@ -101,7 +106,9 @@ def get_images(outputdir, searchurl, maximum):
     if not os.path.exists(outputdir):
         os.makedirs(outputdir)
 
-    download_urls(urls, outputdir)
+    write_urls(json_path, parent_key, key, urls)
+
+    # download_urls(urls, outputdir)
     browser.close()
 
 def scroll_down(body):
@@ -118,17 +125,32 @@ def get_url_from_images(html_images):
     for image in html_images:
         try:
             url = image['data-src']
-            if not url.find('https://'):
+            if not url.find("https://"):
                 urls.append(url)
         except:
             try:
                 url = image['src']
-                if not url.find('https://'):
+                if not url.find("https://"):
                     urls.append(image['src'])
             except Exception as e:
                 print(f'No found image sources.')
                 print(e)
     return urls
 
-get_images(os.path.join(OUTPUT, keywords[0]), search_url(keywords[0]), 500)
-get_images(os.path.join(OUTPUT, keywords[1]), search_url(keywords[1]), 500)
+def write_urls(path, parent_type, type, urls):
+    string_list = (",".join(urls))
+    data = dict()
+    if os.path.isfile(path):
+        with open(path, 'r') as fp:
+            data = json.load(fp)
+            data = ast.literal_eval(data)
+    if parent_type not in data:
+        data[parent_type] = dict()
+    data[parent_type][type] = string_list
+    with open(path, 'w') as fp:
+        json.dump(str(data), fp)
+
+for key in keywords:
+    for sub_key in keywords[key]:
+        path = os.path.join(os.path.join(OUTPUT, key),sub_key)
+        get_images(path, key, sub_key, search_url(sub_key), 500, "urls.json")
