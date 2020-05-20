@@ -17,9 +17,16 @@ urllib3.disable_warnings(InsecureRequestWarning)
 
 
 chromedriver = 'C://Users//lotan//OneDrive//Documents//studies//affordances//dataset_crawler//Crawler//executable_files//chromedriver.exe'
-keywords = {"knife":["Precision Knife", "Utility Knife", "Chef's Knife", "Trimming Knife", "Boning Knife", "Oyster Knife", "Linoleum Knife"]}
+keywords = {"knife":["Precision Knife", "Utility Knife", "Chef's Knife", "Trimming Knife", "Boning Knife", "Oyster Knife", "Linoleum Knife"],
+            "sword":["battle sword"],
+            "spear":["spear"],
+            "sickle":["garden sickle"],
+            "screwdriver": ["screwdriver plus"],
+            "scizzers": ["scizzers"]}
 search_url = lambda keyword: 'https://www.google.com/search?q=' + keyword.replace(" ", "+") + '&source=lnms&tbm=isch'
 OUTPUT = 'pictures'
+MAX_EXAMPLES_FOR_CLASS = 500
+JSON_FILE = "urls.json"
 
 
 def get_div_child(soup, child_id):
@@ -150,7 +157,26 @@ def write_urls(path, parent_type, type, urls):
     with open(path, 'w') as fp:
         json.dump(str(data), fp)
 
+
+def download_from_file(file_path, outputdir):
+    if os.path.isfile(file_path):
+        with open(file_path, 'r') as fp:
+            data = json.load(fp)
+            data = ast.literal_eval(data)
+
+    for key in keywords:
+        for sub_key in keywords[key]:
+            path = os.path.join(os.path.join(outputdir, key), sub_key)
+            if not os.path.exists(path):
+                os.makedirs(path)
+            urls = data[key][sub_key]
+
+            urls = urls.split(",")
+            download_urls(urls, path)
+
 for key in keywords:
     for sub_key in keywords[key]:
         path = os.path.join(os.path.join(OUTPUT, key),sub_key)
-        get_images(path, key, sub_key, search_url(sub_key), 500, "urls.json")
+        get_images(path, key, sub_key, search_url(sub_key), MAX_EXAMPLES_FOR_CLASS, JSON_FILE)
+
+download_from_file(JSON_FILE, OUTPUT)
