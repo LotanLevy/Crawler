@@ -2,6 +2,8 @@ import os
 import argparse
 import utils
 
+PATH_LABEL_SEP = "$"
+
 
 def get_map_file_path(output_path, dataset_name):
     return os.path.join(output_path, "{}_map.txt".format(dataset_name))
@@ -24,7 +26,7 @@ def generate_path_label_file_map(images_main_dir, dataset_name, output_path):
         labels += [int(dir)] * len(images_names)
 
     lines_list = list(zip(images, labels))
-    lines = ["{} {}\n".format(os.path.join(images_main_dir, pair[0]), pair[1]) for pair in lines_list]
+    lines = ["{}{}{}\n".format(os.path.join(images_main_dir, pair[0]),PATH_LABEL_SEP, pair[1]) for pair in lines_list]
     with open(get_map_file_path(output_path, dataset_name), "w") as mf:
         mf.writelines(lines)
 
@@ -40,17 +42,17 @@ def split_into_target_and_alien(map_file, output_path, target_labels):
             alien_paths.append(images[i])
 
     with open(get_target_file_path(output_path), 'w') as tf:
-        lines = [path +" 1\n" for path in target_paths]
+        lines = [path +PATH_LABEL_SEP+"1\n" for path in target_paths]
         tf.writelines(lines)
 
     with open(get_alien_file_path(output_path), 'w') as af:
-        lines = [path +" 0\n" for path in alien_paths]
+        lines = [path +PATH_LABEL_SEP+"0\n" for path in alien_paths]
         af.writelines(lines)
 
 def insert_lines(dest, paths, labels):
     assert len(paths) == len(labels)
     with open(dest, 'a') as df:
-        lines = ["{} {}\n".format(paths[i], labels[i]) for i in range(len(paths))]
+        lines = ["{}{}{}\n".format(paths[i], PATH_LABEL_SEP, labels[i]) for i in range(len(paths))]
         df.writelines(lines)
 
 
