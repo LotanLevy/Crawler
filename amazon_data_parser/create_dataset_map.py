@@ -1,6 +1,6 @@
 import os
 import argparse
-from amazon_data_parser import utils
+import utils
 
 
 def get_map_file_path(output_path, dataset_name):
