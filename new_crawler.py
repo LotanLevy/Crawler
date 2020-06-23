@@ -16,15 +16,17 @@ from urllib3.exceptions import InsecureRequestWarning
 urllib3.disable_warnings(InsecureRequestWarning)
 
 
-chromedriver = 'C://Users//lotan//OneDrive//Documents//studies//affordances//dataset_crawler//Crawler//executable_files//chromedriver.exe'
-keywords = {"knife":["Precision Knife", "Utility Knife", "Chef's Knife", "Trimming Knife", "Boning Knife", "Oyster Knife", "Linoleum Knife"],
-            "sword":["battle sword"],
+chromedriver = 'C://Users//lotan//Documents//affordances//OneClassClassification//Crawler//executable_files//chromedriver.exe'
+keywords = {"knife":["Precision Knife", "Utility Knife", "Chef's Knife", "Trimming Knife", "Boning Knife",
+                     "Oyster Knife", "Linoleum Knife", "open pocket knife", "karambit sharp knife", "fillet knife"],
+            "sword":["battle sword", "vector sword"],
             "spear":["spear"],
             "sickle":["garden sickle"],
             "screwdriver": ["screwdriver plus"],
-            "scizzers": ["scizzers"]}
+            "scissors": ["scissors"],
+            "dagger": ["dagger"]}
 search_url = lambda keyword: 'https://www.google.com/search?q=' + keyword.replace(" ", "+") + '&source=lnms&tbm=isch'
-OUTPUT = 'pictures'
+OUTPUT = 'C://Users//lotan//Documents//affordances//OneClassClassification//datasets//target_data'
 MAX_EXAMPLES_FOR_CLASS = 500
 JSON_FILE = "urls.json"
 
@@ -96,6 +98,7 @@ def get_images(outputdir, parent_key, key, searchurl, maximum, json_path):
     while len(urls) < maximum:
         try:
             page_source = browser.page_source
+
             soup = BeautifulSoup(page_source, 'lxml')
 
             search_result_soup = get_div_child(soup.body, "islrg")

@@ -3,6 +3,7 @@ import gzip
 import json
 import re
 import argparse
+import urllib.request
 
 DESCRIPTION_REGEX = ".*(description: \".*\"),"
 pattern = re.compile(DESCRIPTION_REGEX)
@@ -69,6 +70,23 @@ class Parser:
                     print("line {} cant be parsed".format(line))
                     continue
 
+
+def save_images(outputpath, urls_labels_map_file):
+    main_path = os.path.join(outputpath, "amazon_dataset")
+    image_num=0
+    with open(urls_labels_map_file, 'r') as file:
+        for line in file:  # Read one line.
+            line_items = line.split(" ")
+            path = os.path.join(main_path, line_items[1].strip())
+
+            if not os.path.exists(path):
+                os.makedirs(path)
+
+            urllib.request.urlretrieve(line_items[0].strip(),
+                                       os.path.join(path, "{}.png".format(image_num)))
+            image_num += 1
+
+
 def get_config():
     parser = argparse.ArgumentParser(description='Parse Amazon json file')
     parser.add_argument('--inputpath', '-ip', help='File to parse path')
@@ -82,3 +100,5 @@ if __name__ == "__main__":
     if not os.path.exists(args.outputpath):
         os.makedirs(args.outputpath)
     p.write_items(args.outputpath)
+
+    save_images(args.outputpath, os.path.join(args.outputpath, "urlfile.txt"))
