@@ -91,14 +91,16 @@ def get_config():
     parser = argparse.ArgumentParser(description='Parse Amazon json file')
     parser.add_argument('--inputpath', '-ip', help='File to parse path')
     parser.add_argument('--outputpath', '-op', help='Directory for the outputs')
-    parser.add_argument('--maxlines', '-ml', type=int, help='Maximum lines to parse')
+    parser.add_argument('--maxlines', '-ml', default=-1, type=int, help='Maximum lines to parse')
     return parser.parse_args()
 
 if __name__ == "__main__":
     args = get_config()
-    p = Parser(args.inputpath, args.maxlines)
     if not os.path.exists(args.outputpath):
         os.makedirs(args.outputpath)
+    p = Parser(args.inputpath, args.maxlines)
     p.write_items(args.outputpath)
+
+
 
     save_images(args.outputpath, os.path.join(args.outputpath, "urlfile.txt"))

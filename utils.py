@@ -1,7 +1,8 @@
 
 import numpy as np
 import os
-# from PIL import Image
+from PIL import Image
+import matplotlib.pyplot as plt
 import cv2
 import re
 
@@ -31,42 +32,43 @@ def read_image(image_file):
 
 
 
-#
-# class AugmentHelper:
-#     @staticmethod
-#     def scale_by(image, scale_factor):
-#         new_size = (image.shape[0] * scale_factor, image.shape[1] * scale_factor)
-#         pil_image = Image.fromarray(image.astype(np.uint8))
-#         pil_image = pil_image.resize(new_size)
-#         return np.array(pil_image)
-#
-#     @staticmethod
-#     def flip(image, axis):
-#         return np.flip(image, axis=axis)
-#
-#     @staticmethod
-#     def create_augmentation_dir(dir_name, to_augment_paths, labels, output_path):
-#         new_dir = os.path.join(output_path, dir_name)
-#         if not os.path.exists(new_dir):
-#             os.makedirs(new_dir)
-#         new_paths = []
-#         new_labels = []
-#         for i in range(len(to_augment_paths)):
-#             image = read_image(to_augment_paths[i])
-#
-#             augmented_images = [AugmentHelper.scale_by(image, 2),AugmentHelper.scale_by(image, 5),
-#                                 AugmentHelper.flip(image, 0), AugmentHelper.flip(image, 1)]
-#             augmented_paths = [os.path.join(new_dir, "{}_scaledby2.jpg").format(i),
-#                                        os.path.join(new_dir, "{}_scaledby5.jpg").format(i),
-#                                        os.path.join(new_dir, "{}_xflipped.jpg").format(i),
-#                                        os.path.join(new_dir, "{}_yflipped.jpg").format(i)]
-#
-#             for image, path in list(zip(augmented_images, augmented_paths)):
-#                 f = plt.figure()
-#                 plt.imshow(image)
-#                 plt.savefig(path)
-#                 plt.close(fig=f)
-#
-#             new_paths += augmented_paths
-#             new_labels += [labels[i]] * len(augmented_paths)
-#         return new_paths, np.array(new_labels)
+
+class AugmentHelper:
+    @staticmethod
+    def scale_by(image, scale_factor):
+        new_size = (image.shape[0] * scale_factor, image.shape[1] * scale_factor)
+        pil_image = Image.fromarray(image.astype(np.uint8))
+        pil_image = pil_image.resize(new_size)
+        return np.array(pil_image)
+
+    @staticmethod
+    def flip(image, axis):
+        return np.flip(image, axis=axis)
+
+    @staticmethod
+    def create_augmentation_dir(dir_name, to_augment_paths, labels, output_path):
+        new_dir = os.path.join(output_path, dir_name)
+        if not os.path.exists(new_dir):
+            os.makedirs(new_dir)
+        new_paths = []
+        new_labels = []
+        for i in range(len(to_augment_paths)):
+            image = read_image(to_augment_paths[i])
+            name = image_name(to_augment_paths[i])
+
+            augmented_images = [AugmentHelper.scale_by(image, 2),AugmentHelper.scale_by(image, 5),
+                                AugmentHelper.flip(image, 0), AugmentHelper.flip(image, 1)]
+            augmented_paths = [os.path.join(new_dir, "{}_scaledby2.jpg").format(name),
+                                       os.path.join(new_dir, "{}_scaledby5.jpg").format(name),
+                                       os.path.join(new_dir, "{}_xflipped.jpg").format(name),
+                                       os.path.join(new_dir, "{}_yflipped.jpg").format(name)]
+
+            for image, path in list(zip(augmented_images, augmented_paths)):
+                f = plt.figure()
+                plt.imshow(image)
+                plt.savefig(path)
+                plt.close(fig=f)
+
+            new_paths += augmented_paths
+            new_labels += [labels[i]] * len(augmented_paths)
+        return new_paths, np.array(new_labels)
