@@ -82,8 +82,11 @@ def save_images(outputpath, urls_labels_map_file):
             if not os.path.exists(path):
                 os.makedirs(path)
 
-            urllib.request.urlretrieve(line_items[0].strip(),
-                                       os.path.join(path, "{}.png".format(image_num)))
+            try:
+                urllib.request.urlretrieve(line_items[0].strip(),
+                                           os.path.join(path, "{}.png".format(image_num)))
+            except urllib.error.HTTPError:
+                continue
             image_num += 1
 
 
@@ -98,8 +101,8 @@ if __name__ == "__main__":
     args = get_config()
     if not os.path.exists(args.outputpath):
         os.makedirs(args.outputpath)
-    p = Parser(args.inputpath, args.maxlines)
-    p.write_items(args.outputpath)
+    # p = Parser(args.inputpath, args.maxlines)
+    # p.write_items(args.outputpath)
 
 
 
