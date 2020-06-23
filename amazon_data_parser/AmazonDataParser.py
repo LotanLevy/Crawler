@@ -81,6 +81,7 @@ def save_images(outputpath, urls_labels_map_file):
 
             if not os.path.exists(path):
                 os.makedirs(path)
+                print(path)
 
             try:
                 urllib.request.urlretrieve(line_items[0].strip(),
@@ -88,6 +89,7 @@ def save_images(outputpath, urls_labels_map_file):
             except urllib.error.HTTPError:
                 continue
             image_num += 1
+
 
 
 def get_config():
