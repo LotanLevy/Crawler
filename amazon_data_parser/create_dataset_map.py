@@ -31,7 +31,7 @@ def generate_path_label_file_map(images_main_dir, dataset_name, output_path):
         mf.writelines(lines)
 
 def split_into_target_and_alien(map_file, output_path, target_labels):
-    images, labels = utils.read_dataset_map(map_file)
+    images, labels = utils.read_dataset_map(map_file, PATH_LABEL_SEP)
 
     target_paths = []
     alien_paths = []
@@ -85,7 +85,7 @@ def get_config():
 if __name__ == "__main__":
     args = get_config()
 
-    output_path = os.path.join(args.outputpath, args.datasetname)
+    output_path = args.outputpath
     if not os.path.exists(output_path):
         os.makedirs(output_path)
 
@@ -97,10 +97,10 @@ if __name__ == "__main__":
         map_path = get_map_file_path(output_path, args.datasetname)
         split_into_target_and_alien(map_path, output_path, args.targetlabels)
     if args.augment_target:
-        to_augment_paths, labels = utils.read_dataset_map(get_target_file_path(output_path))
+        to_augment_paths, labels = utils.read_dataset_map(get_target_file_path(output_path), PATH_LABEL_SEP)
         paths, labels = utils.AugmentHelper.create_augmentation_dir("augmented_target", to_augment_paths, labels, args.augmentdir)
         insert_lines(get_target_file_path(output_path), paths, labels)
     if args.augment_alien:
-        to_augment_paths, labels = utils.read_dataset_map(get_alien_file_path(output_path))
+        to_augment_paths, labels = utils.read_dataset_map(get_alien_file_path(output_path), PATH_LABEL_SEP)
         paths, labels = utils.AugmentHelper.create_augmentation_dir("augmented_alien", to_augment_paths, labels, args.augmentdir)
         insert_lines(get_alien_file_path(output_path), paths, labels)

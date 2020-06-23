@@ -11,10 +11,10 @@ def image_name(image_path):
     m = re.match(regex, image_path)
     return m.group(1) + "_" + m.group(2)
 
-def read_dataset_map(data_map_path):
+def read_dataset_map(data_map_path, line_sep):
     with open(data_map_path, "r") as lf:
         lines_list = lf.read().splitlines()
-        lines = [line.split(" ") for line in lines_list]
+        lines = [line.split(line_sep) for line in lines_list]
         images, labels = [], []
         if len(lines) > 0:
             images, labels = zip(*lines)
