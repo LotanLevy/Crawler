@@ -21,7 +21,7 @@ def generate_path_label_file_map(main_dir, output_path, name):
 
 
     lines_list = list(zip(images, labels))
-    lines = ["{} {}\n".format(os.path.join(main_dir, pair[0]), pair[1]) for pair in lines_list]
+    lines = ["{}{}{}\n".format(os.path.join(main_dir, pair[0]),PATH_LABEL_SEP,  pair[1]) for pair in lines_list]
     with open(os.path.join(output_path, "{}_map.txt".format( name)), "w") as mf:
         mf.writelines(lines)
 
