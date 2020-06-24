@@ -117,3 +117,37 @@ def generate_datafile_from_dict_with_dirname(output_dir, data_dict, line_sep):
         lines = ["{}{}{}\n".format(pair[0], line_sep,  pair[1]) for pair in lines_list]
         with open(os.path.join(output_dir, "{}.txt".format(key)), 'w') as subdata:
             subdata.writelines(lines)
+
+def get_map_file_path(output_path, dataset_name):
+    return os.path.join(output_path, "{}_map.txt".format(dataset_name))
+
+def get_target_file_path(output_path):
+    return os.path.join(output_path, "target.txt")
+def get_alien_file_path(output_path):
+    return os.path.join(output_path, "alien.txt")
+
+def split_into_target_and_alien(map_file, output_path, target_labels):
+    images, labels = read_dataset_map(map_file, PATH_LABEL_SEP)
+
+    target_paths = []
+    alien_paths = []
+    for i in range(len(images)):
+        if str(labels[i]) in target_labels:
+            target_paths.append(images[i])
+        else:
+            alien_paths.append(images[i])
+
+    with open(get_target_file_path(output_path), 'w') as tf:
+        lines = [path +PATH_LABEL_SEP+"1\n" for path in target_paths]
+        tf.writelines(lines)
+
+    with open(get_alien_file_path(output_path), 'w') as af:
+        lines = [path +PATH_LABEL_SEP+"0\n" for path in alien_paths]
+        af.writelines(lines)
+
+
+def insert_lines(dest, paths, labels):
+    assert len(paths) == len(labels)
+    with open(dest, 'a') as df:
+        lines = ["{}{}{}\n".format(paths[i], PATH_LABEL_SEP, labels[i]) for i in range(len(paths))]
+        df.writelines(lines)

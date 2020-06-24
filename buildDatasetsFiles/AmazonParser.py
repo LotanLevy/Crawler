@@ -5,13 +5,9 @@ import argparse
 import utils
 from utils import PATH_LABEL_SEP
 
-def get_map_file_path(output_path, dataset_name):
-    return os.path.join(output_path, "{}_map.txt".format(dataset_name))
 
-def get_target_file_path(output_path):
-    return os.path.join(output_path, "target.txt")
-def get_alien_file_path(output_path):
-    return os.path.join(output_path, "alien.txt")
+
+
 
 
 
@@ -27,33 +23,11 @@ def generate_path_label_file_map(images_main_dir, dataset_name, output_path):
 
     lines_list = list(zip(images, labels))
     lines = ["{}{}{}\n".format(os.path.join(images_main_dir, pair[0]),PATH_LABEL_SEP, pair[1]) for pair in lines_list]
-    with open(get_map_file_path(output_path, dataset_name), "w") as mf:
+    with open(utils.get_map_file_path(output_path, dataset_name), "w") as mf:
         mf.writelines(lines)
 
-def split_into_target_and_alien(map_file, output_path, target_labels):
-    images, labels = utils.read_dataset_map(map_file, PATH_LABEL_SEP)
 
-    target_paths = []
-    alien_paths = []
-    for i in range(len(images)):
-        if str(labels[i]) in target_labels:
-            target_paths.append(images[i])
-        else:
-            alien_paths.append(images[i])
 
-    with open(get_target_file_path(output_path), 'w') as tf:
-        lines = [path +PATH_LABEL_SEP+"1\n" for path in target_paths]
-        tf.writelines(lines)
-
-    with open(get_alien_file_path(output_path), 'w') as af:
-        lines = [path +PATH_LABEL_SEP+"0\n" for path in alien_paths]
-        af.writelines(lines)
-
-def insert_lines(dest, paths, labels):
-    assert len(paths) == len(labels)
-    with open(dest, 'a') as df:
-        lines = ["{}{}{}\n".format(paths[i], PATH_LABEL_SEP, labels[i]) for i in range(len(paths))]
-        df.writelines(lines)
 
 
 
@@ -94,13 +68,13 @@ if __name__ == "__main__":
         generate_path_label_file_map(args.datasetdir, args.datasetname, output_path)
     if args.split:
         target_labels = args.targetlabels.split(",")
-        map_path = get_map_file_path(output_path, args.datasetname)
-        split_into_target_and_alien(map_path, output_path, args.targetlabels)
+        map_path = utils.get_map_file_path(output_path, args.datasetname)
+        utils.split_into_target_and_alien(map_path, output_path, args.targetlabels)
     if args.augment_target:
-        to_augment_paths, labels = utils.read_dataset_map(get_target_file_path(output_path), PATH_LABEL_SEP)
+        to_augment_paths, labels = utils.read_dataset_map(utils.get_target_file_path(output_path), PATH_LABEL_SEP)
         paths, labels = utils.AugmentHelper.create_augmentation_dir("augmented_target", to_augment_paths, labels, args.augmentdir)
-        insert_lines(get_target_file_path(output_path), paths, labels)
+        utils.insert_lines(utils.get_target_file_path(output_path), paths, labels)
     if args.augment_alien:
-        to_augment_paths, labels = utils.read_dataset_map(get_alien_file_path(output_path), PATH_LABEL_SEP)
+        to_augment_paths, labels = utils.read_dataset_map(utils.get_alien_file_path(output_path), PATH_LABEL_SEP)
         paths, labels = utils.AugmentHelper.create_augmentation_dir("augmented_alien", to_augment_paths, labels, args.augmentdir)
-        insert_lines(get_alien_file_path(output_path), paths, labels)
+        utils.insert_lines(utils.get_alien_file_path(output_path), paths, labels)
