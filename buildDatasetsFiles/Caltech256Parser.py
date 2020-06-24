@@ -24,7 +24,6 @@ def generate_path_label_file_map(main_dir, output_path, name, target_labels, ali
     for dir in full_labels:
         dir_label = int(label_to_dir_dict[dir])
         if (dir_label not in target_labels) and (dir_label not in alien_labels):
-            print(dir)
             continue
         full_path = os.path.join(main_dir, dir)
         images_names = os.listdir(full_path)
@@ -65,7 +64,7 @@ if __name__ == "__main__":
     #spliting to target and alien
     target_map = utils.get_target_file_path(args.outputpath)
     map_file = utils.get_map_file_path(args.outputpath, name)
-    utils.split_into_target_and_alien(map_file, args.outputpath, target_labels)
+    utils.split_into_target_and_alien(map_file, args.outputpath, args.targetlabels.split(","))
 
     #augmentation
     to_augment_paths, labels = utils.read_dataset_map(target_map, PATH_LABEL_SEP)
