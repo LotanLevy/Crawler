@@ -42,7 +42,7 @@ def get_config():
     parser.add_argument('--inputpath', '-ip', help='File to parse path')
     parser.add_argument('--outputpath', '-op', help='Directory for the outputs')
     parser.add_argument("--targetlabels", "-tl", help='labels split by comma')
-    parser.add_argument("--alienlabels", "-tl", help='labels split by comma')
+    parser.add_argument("--alienlabels", "-al", help='labels split by comma')
 
 
     return parser.parse_args()
