@@ -22,7 +22,7 @@ def generate_path_label_file_map(main_dir, output_path, name, target_labels, ali
     images = []
     labels = []
     for dir in full_labels:
-        dir_label = label_to_dir_dict[dir]
+        dir_label = int(label_to_dir_dict[dir])
         if (dir_label not in target_labels) and (dir_label not in alien_labels):
             print(dir)
             continue
@@ -56,8 +56,8 @@ if __name__ == "__main__":
     name = "caltech"
     if not os.path.exists(args.outputpath):
         os.makedirs(args.outputpath)
-    target_labels = args.targetlabels.split(",")
-    alien_labels = args.alienlabels.split(",")
+    target_labels = [int(i) for i in args.targetlabels.split(",")]
+    alien_labels = [int(i) for i in args.alienlabels.split(",")]
 
 
     generate_path_label_file_map(args.inputpath, args.outputpath, name, target_labels, alien_labels)
