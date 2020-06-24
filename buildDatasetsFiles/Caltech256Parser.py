@@ -1,7 +1,7 @@
 import argparse
 import os
-from buildDatasetsFiles import utils
-from buildDatasetsFiles.utils import PATH_LABEL_SEP
+import utils
+from utils import PATH_LABEL_SEP
 
 def create_label_map(full_labels, output_path, name):
     # create labels map
