@@ -16,12 +16,15 @@ def create_label_map(full_labels, output_path, name):
     return label_to_dir_dict
 
 
-def generate_path_label_file_map(main_dir, output_path, name):
+def generate_path_label_file_map(main_dir, output_path, name, target_labels, alien_labels):
     full_labels = os.listdir(main_dir)
     label_to_dir_dict = create_label_map(full_labels, output_path, name)
     images = []
     labels = []
     for dir in full_labels:
+        dir_label = label_to_dir_dict[dir]
+        if dir_label not in target_labels and dir_label not in alien_labels:
+            continue
         full_path = os.path.join(main_dir, dir)
         images_names = os.listdir(full_path)
         images += [os.path.join(dir, name) for name in images_names]
@@ -38,7 +41,8 @@ def get_config():
 
     parser.add_argument('--inputpath', '-ip', help='File to parse path')
     parser.add_argument('--outputpath', '-op', help='Directory for the outputs')
-    parser.add_argument("--targetlabels", "-l", help='labels split by comma')
+    parser.add_argument("--targetlabels", "-tl", help='labels split by comma')
+    parser.add_argument("--alienlabels", "-tl", help='labels split by comma')
 
 
     return parser.parse_args()
@@ -49,12 +53,15 @@ if __name__ == "__main__":
     name = "caltech"
     if not os.path.exists(args.outputpath):
         os.makedirs(args.outputpath)
-    generate_path_label_file_map(args.inputpath, args.outputpath, name)
+    target_labels = args.targetlabels.split(",")
+    alien_labels = args.alienlabels.split(",")
+
+
+    generate_path_label_file_map(args.inputpath, args.outputpath, name, target_labels, alien_labels)
 
     #spliting to target and alien
     target_map = utils.get_target_file_path(args.outputpath)
     map_file = utils.get_map_file_path(args.outputpath, name)
-    target_labels = args.targetlabels.split(",")
     utils.split_into_target_and_alien(map_file, args.outputpath, target_labels)
 
     #augmentation
