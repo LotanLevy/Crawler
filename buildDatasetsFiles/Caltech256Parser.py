@@ -43,6 +43,8 @@ def get_config():
     parser.add_argument('--outputpath', '-op', help='Directory for the outputs')
     parser.add_argument("--targetlabels", "-tl", help='labels split by comma')
     parser.add_argument("--alienlabels", "-al", help='labels split by comma')
+    parser.add_argument('--augmentdir', '-ad', help='path to save the augmented images')
+
 
 
     return parser.parse_args()
