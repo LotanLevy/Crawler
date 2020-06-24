@@ -1,8 +1,8 @@
 import os
 import argparse
-import utils
+from buildDatasetsFiles import utils
+from buildDatasetsFiles.utils import PATH_LABEL_SEP
 
-PATH_LABEL_SEP = "$"
 
 
 def get_map_file_path(output_path, dataset_name):
