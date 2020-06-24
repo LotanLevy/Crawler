@@ -10,7 +10,6 @@ PATH_LABEL_SEP = "$"
 
 
 def image_name(image_path):
-    print(image_path)
     regex = ".*\\/(.*)\\/(.*).jpg"
     m = re.match(regex, image_path)
     return m.group(1) + "_" + m.group(2)
