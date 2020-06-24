@@ -23,7 +23,8 @@ def generate_path_label_file_map(main_dir, output_path, name, target_labels, ali
     labels = []
     for dir in full_labels:
         dir_label = label_to_dir_dict[dir]
-        if dir_label not in target_labels and dir_label not in alien_labels:
+        if (dir_label not in target_labels) and (dir_label not in alien_labels):
+            print(dir)
             continue
         full_path = os.path.join(main_dir, dir)
         images_names = os.listdir(full_path)
