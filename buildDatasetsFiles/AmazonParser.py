@@ -1,9 +1,9 @@
 import os
 import argparse
-from buildDatasetsFiles import utils
-from buildDatasetsFiles.utils import PATH_LABEL_SEP
 
 
+import utils
+from utils import PATH_LABEL_SEP
 
 def get_map_file_path(output_path, dataset_name):
     return os.path.join(output_path, "{}_map.txt".format(dataset_name))

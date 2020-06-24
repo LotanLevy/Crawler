@@ -2,7 +2,7 @@
 import os
 import argparse
 
-from buildDatasetsFiles.utils import PATH_LABEL_SEP
+from utils import PATH_LABEL_SEP
 
 
 def generate_path_label_file_map(main_dir, output_path, name):

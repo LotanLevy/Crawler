@@ -2,8 +2,8 @@
 import os
 import argparse
 import numpy as np
-from buildDatasetsFiles import utils
-from buildDatasetsFiles.utils import PATH_LABEL_SEP
+import utils
+from utils import PATH_LABEL_SEP
 
 
 
