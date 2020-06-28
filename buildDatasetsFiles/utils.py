@@ -59,11 +59,14 @@ class AugmentHelper:
             image = read_image(to_augment_paths[i])
             name = image_name(to_augment_paths[i])
 
-            augmented_images = [AugmentHelper.scale_by(image, 2),AugmentHelper.scale_by(image, 5),
-                                AugmentHelper.flip(image, 0), AugmentHelper.flip(image, 1)]
-            augmented_paths = [os.path.join(new_dir, "{}_scaledby2.jpg").format(name),
-                                       os.path.join(new_dir, "{}_scaledby5.jpg").format(name),
-                                       os.path.join(new_dir, "{}_xflipped.jpg").format(name),
+            # augmented_images = [AugmentHelper.scale_by(image, 2),AugmentHelper.scale_by(image, 5),
+            #                     AugmentHelper.flip(image, 0), AugmentHelper.flip(image, 1)]
+            # augmented_paths = [os.path.join(new_dir, "{}_scaledby2.jpg").format(name),
+            #                            os.path.join(new_dir, "{}_scaledby5.jpg").format(name),
+            #                            os.path.join(new_dir, "{}_xflipped.jpg").format(name),
+            #                            os.path.join(new_dir, "{}_yflipped.jpg").format(name)]
+            augmented_images = [AugmentHelper.flip(image, 0), AugmentHelper.flip(image, 1)]
+            augmented_paths = [os.path.join(new_dir, "{}_xflipped.jpg").format(name),
                                        os.path.join(new_dir, "{}_yflipped.jpg").format(name)]
 
             for image, path in list(zip(augmented_images, augmented_paths)):

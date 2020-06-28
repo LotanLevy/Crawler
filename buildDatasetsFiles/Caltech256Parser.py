@@ -67,10 +67,10 @@ if __name__ == "__main__":
     utils.split_into_target_and_alien(map_file, args.outputpath, args.targetlabels.split(","))
 
     #augmentation
-    # to_augment_paths, labels = utils.read_dataset_map(target_map, PATH_LABEL_SEP)
-    # paths, labels = utils.AugmentHelper.create_augmentation_dir("augmented_target", to_augment_paths, labels,
-    #                                                             args.augmentdir)
-    # utils.insert_lines(target_map, paths, labels)
+    to_augment_paths, labels = utils.read_dataset_map(target_map, PATH_LABEL_SEP)
+    paths, labels = utils.AugmentHelper.create_augmentation_dir("augmented_target", to_augment_paths, labels,
+                                                                args.augmentdir)
+    utils.insert_lines(target_map, paths, labels)
 
     #splitting target into subsets
     datasubsets = utils.split_data_into_subsets_with_filename(target_map, [1], [0.5, 0, 0.5])
