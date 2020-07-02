@@ -14,6 +14,7 @@ def get_map_path(output_path, name):
 
 def generate_path_label_file_map(main_dir, output_path, label_file, name):
     images_names = os.listdir(main_dir)
+    print(images_names)
     with open(label_file, "r") as lf:
         labels = lf.readlines()
         labels = [int(i) for i in labels]
