@@ -106,7 +106,7 @@ def parseClassesFile(filepath):
     with open(filepath, 'r') as file:
         lines = file.read().splitlines()
         for line in lines:
-            classes.append(int(line.strip().split(":")[1]))
+            classes.append(line.strip().split(":")[1])
     return classes
 
 
