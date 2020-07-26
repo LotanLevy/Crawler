@@ -101,6 +101,17 @@ def save_images(outputpath, urls_labels_map_file, max_items_for_cls, classes):
             except urllib.error.HTTPError:
                 continue
 
+def parseClassesFile(filepath):
+    classes = []
+    with open(filepath, 'r') as file:
+        lines = file.read().splitlines()
+        for line in lines:
+            classes.append(int(line.strip().split(":")[1]))
+    return classes
+
+
+
+
 
 
 def get_config():
@@ -127,5 +138,6 @@ if __name__ == "__main__":
         p = Parser(args.inputpath, args.maxlines)
         p.write_items(args.outputpath)
     if args.download:
-        classes = args.relevantcls.split(",")
+        # classes = args.relevantcls.split(",")
+        classes = parseClassesFile(args.relevantcls)
         save_images(args.outputpath, os.path.join(args.outputpath, "urlfile.txt"), args.maxforcls, classes)
