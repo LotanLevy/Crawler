@@ -106,7 +106,7 @@ def parseClassesFile(filepath):
     with open(filepath, 'r') as file:
         lines = file.read().splitlines()
         for line in lines:
-            classes.append(line.strip().split(":")[1])
+            classes.append(line.strip().split(":")[1].strip())
     return classes
 
 
@@ -139,5 +139,5 @@ if __name__ == "__main__":
         p.write_items(args.outputpath)
     if args.download:
         # classes = args.relevantcls.split(",")
-        classes = parseClassesFile(args.relevantcls)
+        classes = parseClassesFile(args.relevantcls) # expecting class number as int
         save_images(args.outputpath, os.path.join(args.outputpath, "urlfile.txt"), args.maxforcls, classes)
