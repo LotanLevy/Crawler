@@ -123,21 +123,21 @@ def split_data_into_subsets_for_every_class(data_map_path, test_classes, sizes):
         mask = np.zeros(len(indices)) # train if mask[i]=0, test if mask[i]=1, val if mask[i]=2
         if l in test_classes: # only when the label in the relevant
             test_size = int(np.floor(sizes[0] * len(indices)))
-            test_indices = np.random.choice(np.where(mask == 0), test_size)
+            test_indices = np.random.choice(np.where(mask == 0)[0], test_size)
             mask[test_indices] = 1
 
         val_size = int(np.floor(sizes[1] * len(indices)))
-        test_indices = np.random.choice(np.where(mask == 0), val_size)
-        mask[test_indices] = 2
+        val_indices = np.random.choice(np.where(mask == 0)[0], val_size)
+        mask[val_indices] = 2
 
-        datasubsets["train"][0] += [images[i] for i in indices[np.where(mask == 0)]]
-        datasubsets["train"][1] += (l * np.ones(len(np.where(mask == 0)))).tolist()
+        datasubsets["train"][0] += [images[i] for i in indices[np.where(mask == 0)[0]]]
+        datasubsets["train"][1] += (l * np.ones(len(np.where(mask == 0)[0]))).tolist()
 
-        datasubsets["test"][0] += [images[i] for i in indices[np.where(mask == 1)]]
-        datasubsets["test"][1] += (l * np.ones(len(np.where(mask == 1)))).tolist()
+        datasubsets["test"][0] += [images[i] for i in indices[np.where(mask == 1)[0]]]
+        datasubsets["test"][1] += (l * np.ones(len(np.where(mask == 1)[0]))).tolist()
 
-        datasubsets["val"][0] += [images[i] for i in indices[np.where(mask == 2)]]
-        datasubsets["val"][1] += (l * np.ones(len(np.where(mask == 2)))).tolist()
+        datasubsets["val"][0] += [images[i] for i in indices[np.where(mask == 2)[0]]]
+        datasubsets["val"][1] += (l * np.ones(len(np.where(mask == 2)[0]))).tolist()
 
     return datasubsets
 
