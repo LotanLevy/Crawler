@@ -119,7 +119,7 @@ def split_data_into_subsets_for_every_class(data_map_path, test_classes, sizes):
 
     unique_labels = np.unique(labels)
     for l in unique_labels:
-        indices = np.where(labels == l)
+        indices = np.where(labels == l)[0]
         mask = np.zeros(len(indices)) # train if mask[i]=0, test if mask[i]=1, val if mask[i]=2
         if l in test_classes: # only when the label in the relevant
             test_size = int(np.floor(sizes[0] * len(indices)))
