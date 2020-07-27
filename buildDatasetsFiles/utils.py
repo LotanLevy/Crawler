@@ -132,13 +132,13 @@ def split_data_into_subsets_for_every_class(data_map_path, test_classes, sizes):
         mask[val_indices] = 2
 
         images_subsets["train"] += [images[i] for i in indices[np.where(mask == 0)[0]]]
-        labels_subsets["train"] += (l * np.ones(len(np.where(mask == 0)[0]))).tolist()
+        labels_subsets["train"] += (l * np.ones(len(np.where(mask == 0)[0])).astype(np.int)).tolist()
 
         images_subsets["test"] += [images[i] for i in indices[np.where(mask == 1)[0]]]
-        labels_subsets["test"] += (l * np.ones(len(np.where(mask == 1)[0]))).tolist()
+        labels_subsets["test"] += (l * np.ones(len(np.where(mask == 1)[0])).astype(np.int)).tolist()
 
         images_subsets["val"] += [images[i] for i in indices[np.where(mask == 2)[0]]]
-        labels_subsets["val"] += (l * np.ones(len(np.where(mask == 2)[0]))).tolist()
+        labels_subsets["val"] += (l * np.ones(len(np.where(mask == 2)[0])).astype(np.int)).tolist()
 
     datasubsets = {"train":(images_subsets["train"],labels_subsets["train"]),
                    "val":(images_subsets["val"],labels_subsets["val"]),
