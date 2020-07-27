@@ -110,17 +110,17 @@ def split_data_into_subsets_with_filename(data_map_path, test_classes, sizes):
     return datasubsets
 
 
-def split_data_into_subsets_for_every_class(data_map_path, test_classes, sizes):
+def split_data_into_subsets_for_every_class(data_map_path, test_classes, sizes, min_class_representation):
     images, labels = read_dataset_map(data_map_path, PATH_LABEL_SEP)
     images_subsets = {"train":[], "val":[], "test":[]}
     labels_subsets = {"train": [], "val": [], "test": []}
-    train_size, val_size, test_size = int(np.floor(sizes[0] * len(images))),\
-                                      int(np.floor(sizes[1] * len(images))),\
-                                      int(np.floor(sizes[2] * len(images)))
+
 
     unique_labels = np.unique(labels)
     for l in unique_labels:
         indices = np.where(labels == l)[0]
+        if len(indices) < min_class_representation:
+            continue
         mask = np.zeros(len(indices)) # train if mask[i]=0, test if mask[i]=1, val if mask[i]=2
         if l in test_classes: # only when the label in the relevant
             test_size = int(np.floor(sizes[0] * len(indices)))

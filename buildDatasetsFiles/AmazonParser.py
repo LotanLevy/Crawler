@@ -50,6 +50,7 @@ def get_config():
 
     parser.add_argument('--datasetdir', '-d', help='File to parse path')
     parser.add_argument('--augmentdir', '-ad', help='path to save the augmented images')
+    parser.add_argument('--min_repre', type=int, default=100)
 
     parser.add_argument('--outputpath', '-op', help='Directory for the outputs')
     parser.add_argument('--datasetname', '-name', help='dataset name')
@@ -74,7 +75,7 @@ if __name__ == "__main__":
         utils.split_into_target_and_alien(map_path, output_path, args.targetlabels)
     if args.train_split:
         map_path = utils.get_map_file_path(output_path, args.datasetname)
-        datasubsets = utils.split_data_into_subsets_for_every_class(map_path, [], [0.9, 0.1, 0])
+        datasubsets = utils.split_data_into_subsets_for_every_class(map_path, [], [0.9, 0.1, 0], args.min_repre)
         utils.generate_datafile_from_dict_with_dirname(args.outputpath, datasubsets, PATH_LABEL_SEP)
 
     if args.augment_target:
