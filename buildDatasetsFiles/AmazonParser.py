@@ -41,6 +41,8 @@ def get_config():
     parser = argparse.ArgumentParser(description='Parse Amazon json file')
     parser.add_argument('--map', '-m', action="store_true", default=False, help='creating map for the data')
     parser.add_argument('--split', '-s', action="store_true", default=False, help='splitting into target and alien')
+    parser.add_argument('--train_split', '-ts', action="store_true", default=False, help='splitting into train, val, test')
+
     parser.add_argument('--augment_target', '-at', action="store_true", default=False, help='create augmentation files for the target')
     parser.add_argument('--augment_alien', '-aa', action="store_true", default=False, help='create augmentation files for the alien')
 
@@ -70,6 +72,11 @@ if __name__ == "__main__":
         target_labels = args.targetlabels.split(",")
         map_path = utils.get_map_file_path(output_path, args.datasetname)
         utils.split_into_target_and_alien(map_path, output_path, args.targetlabels)
+    if args.train_split:
+        map_path = utils.get_map_file_path(output_path, args.datasetname)
+        datasubsets = utils.split_data_into_subsets_with_filename(map_path, [], [0.9, 0.1, 0])
+        utils.generate_datafile_from_dict_with_dirname(args.outputpath, datasubsets, PATH_LABEL_SEP)
+
     if args.augment_target:
         to_augment_paths, labels = utils.read_dataset_map(utils.get_target_file_path(output_path), PATH_LABEL_SEP)
         paths, labels = utils.AugmentHelper.create_augmentation_dir("augmented_target", to_augment_paths, labels, args.augmentdir)
