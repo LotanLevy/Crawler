@@ -110,6 +110,38 @@ def split_data_into_subsets_with_filename(data_map_path, test_classes, sizes):
     return datasubsets
 
 
+def split_data_into_subsets_for_every_class(data_map_path, test_classes, sizes):
+    images, labels = read_dataset_map(data_map_path, PATH_LABEL_SEP)
+    datasubsets = {"train":([], []), "val":([], []), "test":([], [])}
+    train_size, val_size, test_size = int(np.floor(sizes[0] * len(images))),\
+                                      int(np.floor(sizes[1] * len(images))),\
+                                      int(np.floor(sizes[2] * len(images)))
+
+    unique_labels = np.unique(labels)
+    for l in unique_labels:
+        indices = np.where(labels == l)
+        mask = np.zeros(len(indices)) # train if mask[i]=0, test if mask[i]=1, val if mask[i]=2
+        if l in test_classes: # only when the label in the relevant
+            test_size = int(np.floor(sizes[0] * len(indices)))
+            test_indices = np.random.choice(np.where(mask == 0), test_size)
+            mask[test_indices] = 1
+
+        val_size = int(np.floor(sizes[1] * len(indices)))
+        test_indices = np.random.choice(np.where(mask == 0), val_size)
+        mask[test_indices] = 2
+
+        datasubsets["train"][0] += [images[i] for i in indices[np.where(mask == 0)]]
+        datasubsets["train"][1] += (l * np.ones(len(np.where(mask == 0)))).tolist()
+
+        datasubsets["test"][0] += [images[i] for i in indices[np.where(mask == 1)]]
+        datasubsets["test"][1] += (l * np.ones(len(np.where(mask == 1)))).tolist()
+
+        datasubsets["val"][0] += [images[i] for i in indices[np.where(mask == 2)]]
+        datasubsets["val"][1] += (l * np.ones(len(np.where(mask == 2)))).tolist()
+
+    return datasubsets
+
+
 def generate_datafile_from_dict_with_dirname(output_dir, data_dict, line_sep):
 
     if not os.path.exists(output_dir):
