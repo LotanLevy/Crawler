@@ -112,7 +112,8 @@ def split_data_into_subsets_with_filename(data_map_path, test_classes, sizes):
 
 def split_data_into_subsets_for_every_class(data_map_path, test_classes, sizes):
     images, labels = read_dataset_map(data_map_path, PATH_LABEL_SEP)
-    datasubsets = {"train":([], []), "val":([], []), "test":([], [])}
+    images_subsets = {"train":[], "val":[], "test":[]}
+    labels_subsets = {"train": [], "val": [], "test": []}
     train_size, val_size, test_size = int(np.floor(sizes[0] * len(images))),\
                                       int(np.floor(sizes[1] * len(images))),\
                                       int(np.floor(sizes[2] * len(images)))
@@ -130,14 +131,18 @@ def split_data_into_subsets_for_every_class(data_map_path, test_classes, sizes):
         val_indices = np.random.choice(np.where(mask == 0)[0], val_size)
         mask[val_indices] = 2
 
-        datasubsets["train"][0] += [images[i] for i in indices[np.where(mask == 0)[0]]]
-        datasubsets["train"][1] += (l * np.ones(len(np.where(mask == 0)[0]))).tolist()
+        images_subsets["train"] += [images[i] for i in indices[np.where(mask == 0)[0]]]
+        labels_subsets["train"] += (l * np.ones(len(np.where(mask == 0)[0]))).tolist()
 
-        datasubsets["test"][0] += [images[i] for i in indices[np.where(mask == 1)[0]]]
-        datasubsets["test"][1] += (l * np.ones(len(np.where(mask == 1)[0]))).tolist()
+        images_subsets["test"] += [images[i] for i in indices[np.where(mask == 1)[0]]]
+        labels_subsets["test"] += (l * np.ones(len(np.where(mask == 1)[0]))).tolist()
 
-        datasubsets["val"][0] += [images[i] for i in indices[np.where(mask == 2)[0]]]
-        datasubsets["val"][1] += (l * np.ones(len(np.where(mask == 2)[0]))).tolist()
+        images_subsets["val"] += [images[i] for i in indices[np.where(mask == 2)[0]]]
+        labels_subsets["val"] += (l * np.ones(len(np.where(mask == 2)[0]))).tolist()
+
+    datasubsets = {"train":(images_subsets["train"],labels_subsets["train"]),
+                   "val":(images_subsets["val"],labels_subsets["val"]),
+                   "test":(images_subsets["test"],labels_subsets["test"])}
 
     return datasubsets
 
