@@ -74,7 +74,7 @@ if __name__ == "__main__":
         utils.split_into_target_and_alien(map_path, output_path, args.targetlabels)
     if args.train_split:
         map_path = utils.get_map_file_path(output_path, args.datasetname)
-        datasubsets = utils.split_data_into_subsets_with_filename(map_path, [], [0.9, 0.1, 0])
+        datasubsets = utils.split_data_into_subsets_for_every_class(map_path, [], [0.9, 0.1, 0])
         utils.generate_datafile_from_dict_with_dirname(args.outputpath, datasubsets, PATH_LABEL_SEP)
 
     if args.augment_target:
