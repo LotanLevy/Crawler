@@ -82,6 +82,8 @@ def save_images(outputpath, urls_labels_map_file, max_items_for_cls, classes):
             if label not in classes:
                 continue
             path = os.path.join(main_path, label)
+            if os.path.exists(path):
+                continue
             if label in item_num_dict:
                 if item_num_dict[label] > max_items_for_cls:
                     continue
