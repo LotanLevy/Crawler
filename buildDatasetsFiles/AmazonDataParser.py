@@ -4,6 +4,7 @@ import json
 import re
 import argparse
 import urllib.request
+import ast
 
 DESCRIPTION_REGEX = ".*(description: \".*\"),"
 pattern = re.compile(DESCRIPTION_REGEX)
@@ -42,6 +43,7 @@ class Parser:
 
 
     def parse_file(self, filepath, maxlines):
+        imagnet_classes_path = ""
         lines = 0
         with gzip.open(filepath , 'r') as gzip_file:
             for line in gzip_file:  # Read one line.
@@ -49,18 +51,24 @@ class Parser:
 
                 try:
                     if line:  # Any JSON data on it?
-                        category_pattern = re.compile("'categories': \[\[(((?!\]).)*)\]\]")
+                        category_pattern = re.compile("'categories': (\[\[(((?!\]).)*)\]\])")
                         url_pattern = re.compile("'imUrl': \'(((?!\').)*)\'")
+
 
                         m1 = category_pattern.search(line)
                         m2 = url_pattern.search(line)
                         if m1 is not None and m2 is not None:
+                            categories_lists = ast.literal_eval(m1.group(1))
+                            object_categories = []
+                            for arr in categories_lists:
+                                object_categories.append(arr[-1])
                             categories = m1.group(1).replace("\'", "").split(",")
                             url = m2.group(1)
-                            for c in categories:
+                            for c in object_categories:
                                 if c not in self.items:
                                     self.items[c] = []
                                 self.items[c].append(url)
+                        # print(self.items.keys())
 
                         lines += 1
                         if maxlines > 0 and lines >= maxlines:
@@ -102,12 +110,9 @@ def save_images(outputpath, urls_labels_map_file, max_items_for_cls, classes):
                 continue
 
 def parseClassesFile(filepath):
-    classes = []
     with open(filepath, 'r') as file:
-        lines = file.read().splitlines()
-        for line in lines:
-            classes.append(line.strip().split(":")[1].strip())
-    return classes
+        data = json.load(file)
+        return data.values()
 
 
 
