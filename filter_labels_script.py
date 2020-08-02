@@ -18,8 +18,8 @@ def read_classes_from_imagenet_file(path):
             for subword in sub_words:
                 words.add(process_word(subword))
                 subword_splitted = subword.split(" ")
-                if len(subword_splitted) > 1:
-                    words.add(process_word(subword_splitted[-1]))
+                # if len(subword_splitted) > 1:
+                #     words.add(process_word(subword_splitted[-1]))
         return words
 
 def filter_amazon_classes_by_keywords(path, keywords, dest):

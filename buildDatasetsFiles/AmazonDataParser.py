@@ -87,7 +87,7 @@ def save_images(outputpath, urls_labels_map_file, max_items_for_cls, classes):
         for line in file:  # Read one line.
             line_items = line.split(" ")
             label = line_items[1].strip()
-            if label not in classes:
+            if int(label) not in classes:
                 continue
             path = os.path.join(main_path, label)
             if label in item_num_dict:
