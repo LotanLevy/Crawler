@@ -82,16 +82,16 @@ class Parser:
 def save_images(outputpath, urls_labels_map_file, max_items_for_cls, classes):
     main_path = os.path.join(outputpath, "amazon_dataset")
     item_num_dict = dict()
+    existing_classes = os.listdir(main_path)
+    print(existing_classes)
     image_num=0
     with open(urls_labels_map_file, 'r') as file:
         for line in file:  # Read one line.
             line_items = line.split(" ")
             label = line_items[1].strip()
-            if int(label) not in classes:
+            if (int(label) not in classes) or (label in existing_classes):
                 continue
             path = os.path.join(main_path, label)
-            if os.path.exists(path):
-                continue
             if label in item_num_dict:
                 if item_num_dict[label] > max_items_for_cls:
                     continue
