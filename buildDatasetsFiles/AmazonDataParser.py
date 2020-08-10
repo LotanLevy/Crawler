@@ -5,6 +5,7 @@ import re
 import argparse
 import urllib.request
 import ast
+from PIL import Image
 
 DESCRIPTION_REGEX = ".*(description: \".*\"),"
 pattern = re.compile(DESCRIPTION_REGEX)
@@ -106,8 +107,13 @@ def save_images(outputpath, urls_labels_map_file, max_items_for_cls, classes):
 
 
             try:
-                urllib.request.urlretrieve(line_items[0].strip(),
-                                           os.path.join(path, "{}.jpg".format(image_num)))
+                image_path = os.path.join(path, "{}.jpg".format(image_num))
+                urllib.request.urlretrieve(line_items[0].strip(), image_path)
+                try:
+                    Image.open(image_path)
+                except:
+                    os.remove(image_path)
+                    continue
                 image_num += 1
 
             except urllib.error.HTTPError:
