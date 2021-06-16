@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import ElementNotInteractableException
 from bs4 import BeautifulSoup
+from webdriver_manager.chrome import ChromeDriverManager
 import sys
 import os
 import time
@@ -16,17 +17,10 @@ from urllib3.exceptions import InsecureRequestWarning
 urllib3.disable_warnings(InsecureRequestWarning)
 
 
-chromedriver = 'C://Users//lotan//Documents//affordances//OneClassClassification//Crawler//executable_files//chromedriver.exe'
-keywords = {"knife":["Precision Knife", "Utility Knife", "Chef's Knife", "Trimming Knife", "Boning Knife",
-                     "Oyster Knife", "Linoleum Knife", "open pocket knife", "karambit sharp knife", "fillet knife"],
-            "sword":["battle sword", "vector sword"],
-            "spear":["spear"],
-            "sickle":["garden sickle"],
-            "screwdriver": ["screwdriver plus"],
-            "scissors": ["scissors"],
-            "dagger": ["dagger"]}
+chromedriver = 'C:\\Users\\lotan\\Documents\\studies\\phoenix\\affordances\\Crawler\\executable_files\\chromedriver.exe'
+keywords = {"lamp":["lamp"]}
 search_url = lambda keyword: 'https://www.google.com/search?q=' + keyword.replace(" ", "+") + '&source=lnms&tbm=isch'
-OUTPUT = 'C://Users//lotan//Documents//affordances//OneClassClassification//datasets//target_data'
+OUTPUT = 'C:\\Users\\lotan\\Documents\\studies\\phoenix\\ballpark_datasets\\ballpark_datasets\\new\\flowerpot\\test'
 MAX_EXAMPLES_FOR_CLASS = 500
 JSON_FILE = "urls.json"
 
@@ -47,7 +41,7 @@ def build_browser(searchurl):
     options = webdriver.ChromeOptions()
     options.add_argument('--no-sandbox')
     try:
-        browser = webdriver.Chrome(chromedriver, options=options)
+        browser = webdriver.Chrome(ChromeDriverManager().install())
     except Exception as e:
         print(f'No found chromedriver in this environment.')
         print(f'Install on your machine. exception: {e}')
@@ -104,11 +98,15 @@ def get_images(outputdir, parent_key, key, searchurl, maximum, json_path):
             search_result_soup = get_div_child(soup.body, "islrg")
             images = search_result_soup.find_all('img')
             urls = get_url_from_images(images)
+            print(urls)
 
             for i in range(50):
                 scroll_down(body)
-            browser.find_element_by_xpath('//*[@id="islmp"]/div/div/div/div/div[5]/input').click()
-        except ElementNotInteractableException: # There is no next page
+            # browser.find_element_by_xpath('//*[@id="islmp"]/div/div/div/div')
+            browser.find_element_by_class_name("mye4qd").click()
+            print(len(urls) < maximum)
+        except ElementNotInteractableException as e: # There is no next page
+            print(e)
             break
 
 
